@@ -1,8 +1,6 @@
 # Books API (MySQL, NodeJS, Express)
 Restful API that enables CRUD operations for books / authors and ensures all the routes are tested.
 
-[Live Link](https://job-board-app-mern.netlify.app/)
-
 ## Technologies
 
 ### Backend
