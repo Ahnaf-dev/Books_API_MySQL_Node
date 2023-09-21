@@ -30,6 +30,33 @@ const getBookDetails = async (req, res) => {
   }
 }
 
+const getBooksByAuthor = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [rows] = await db.query('SELECT * FROM authors WHERE id = ?', [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Author not found' });
+    }
+
+    const [bookRows] = await db.query(`SELECT title, CONCAT(firstname, ' ', lastname) as author 
+    FROM books b
+    INNER JOIN authors a ON a.id = b.author_id
+    WHERE b.author_id = ?`, [id]);
+
+    if (bookRows.length === 0) {
+      return res.status(404).json({ error: 'Author not found' });
+    }
+
+    res.json(bookRows);
+    
+  } catch(error) {
+    console.error('Error retrieving author books:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+
 const createBook = async (req, res) => {
   try {
     const { title, id } = req.body;
@@ -37,8 +64,13 @@ const createBook = async (req, res) => {
       return res.status(400).json({ error: 'Title is required' });
     }
 
+    const [rows] = await db.query('SELECT * FROM authors WHERE id = ?', [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Author not found' });
+    }
+
     const [result] = await db.query('INSERT INTO books (title, author_id) VALUES (?, ?)', [title, id]);
-    console.log(result)
     const newBookId = result.insertId;
     res.status(201).json({ id: newBookId, title });
   } catch (error) {
@@ -91,4 +123,5 @@ module.exports = {
   updateBook,
   deleteBook,
   getBookDetails,
+  getBooksByAuthor,
 }
