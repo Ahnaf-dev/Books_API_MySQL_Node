@@ -64,10 +64,13 @@ const createBook = async (req, res) => {
       return res.status(400).json({ error: 'Title is required' });
     }
 
-    const [rows] = await db.query('SELECT * FROM authors WHERE id = ?', [id]);
+    if (id) {
+      const [rows] = await db.query('SELECT * FROM authors WHERE id = ?', [id]);
+  
+      if (rows.length === 0) {
+        return res.status(404).json({ error: 'Author not found' });
+      }
 
-    if (rows.length === 0) {
-      return res.status(404).json({ error: 'Author not found' });
     }
 
     const [result] = await db.query('INSERT INTO books (title, author_id) VALUES (?, ?)', [title, id]);

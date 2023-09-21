@@ -21,7 +21,7 @@ const db = require("../config/db");
  const getAuthor = async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM authors');
-    res.json(rows);
+    res.status(200).json(rows);
   } catch (error) {
     console.error('Error retrieving authors:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -38,7 +38,7 @@ const getAuthorDetail = async (req, res) => {
       return res.status(404).json({ error: 'Author not found' });
     }
 
-    res.json(rows[0]);
+    res.status(200).json(rows[0]);
   } catch (error) {
     console.error('Error retrieving an author:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -61,7 +61,7 @@ const updateAuthor = async (req, res) => {
       return res.status(404).json({ error: 'Author not found' });
     }
 
-    res.json({ id, firstname, lastname });
+    res.status(200).json({ id, firstname, lastname });
   } catch (error) {
     console.error('Error updating an author:', error);
     res.status(500).json({ error: 'Internal Server Error' });

@@ -18,6 +18,11 @@ describe('Book Routes', () => {
 
     expect(Array.isArray(response.body)).toBe(true);
   });
+  it('should retrieve all books by author', async () => {
+    const response = await request(app).get('/api/books/author/3');
+
+    expect(Array.isArray(response.body)).toBe(true);
+  });
 
   it('should update a book by ID', async () => {
     const createResponse = await request(app)
