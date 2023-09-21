@@ -10,6 +10,24 @@ const getBook = async (req, res) => {
   }
 }
 
+const searchBook = async (req, res) => {
+const {term} = req.query;
+
+  try {
+    const [rows] = await db.query(`SELECT * FROM books WHERE title LIKE "${term}%"`);
+
+    
+    if (rows.length < 1) {
+      return res.status(404).json({ error: 'Book not found' });
+    }
+
+    res.json(rows);
+  } catch (error) {
+    console.error('Error retrieving books:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
 const getBookDetails = async (req, res) => {
   try {
 
@@ -127,4 +145,5 @@ module.exports = {
   deleteBook,
   getBookDetails,
   getBooksByAuthor,
+  searchBook
 }

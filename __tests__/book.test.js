@@ -18,6 +18,15 @@ describe('Book Routes', () => {
 
     expect(Array.isArray(response.body)).toBe(true);
   });
+  it('search a book', async () => {
+    const response = await request(app)
+    .post('/api/books')
+    .send({ title: 'Hellsing' });
+    
+    const response = await request(app).get('/api/books/search?term=h');
+
+    expect(Array.isArray(response.body)).toBe(true);
+  });
   it('should retrieve all books by author', async () => {
     const response = await request(app).get('/api/books/author/3');
 
